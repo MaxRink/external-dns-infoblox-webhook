@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.2](https://github.com/AbsaOSS/external-dns-infoblox-webhook/compare/v1.7.1...v1.7.2) (2026-07-21)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump golang.org/x/net from 0.28.0 to 0.38.0 ([9055e21](https://github.com/AbsaOSS/external-dns-infoblox-webhook/commit/9055e21956d640cffe52e867985d70a883efe5d3))
+
 ## [1.7.1](https://github.com/AbsaOSS/external-dns-infoblox-webhook/compare/v1.7.0...v1.7.1) (2026-03-04)
 
 
