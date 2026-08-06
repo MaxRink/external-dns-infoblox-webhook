@@ -35,6 +35,19 @@ Both are the same commits pushed to the PR branches `feat/aaaa-record-support`
 and `feat/ipv6-ptr-support`. This branch adds no provider behaviour of its own,
 only this document.
 
+## Image
+
+Tag `v1.7.2-telekom.2` triggers `.github/workflows/tcaas-image.yaml`, which
+publishes `ghcr.io/maxrink/external-dns-infoblox-webhook:<tag>` (amd64 + arm64)
+using only the built-in `GITHUB_TOKEN`.
+
+That workflow has not run yet. GitHub Actions is disabled on this fork, so no
+workflow is registered and no run is created by a tag push
+(`actions/workflows` reports `total_count: 0`). Enable it once in the web UI at
+`https://github.com/MaxRink/external-dns-infoblox-webhook/actions`, then re-push
+a `-telekom.N` tag. The package must also be flipped to public afterwards, or
+the cluster cannot pull it without an image pull secret.
+
 ## Retirement
 
 Retire this branch and this fork as soon as an upstream release contains both
