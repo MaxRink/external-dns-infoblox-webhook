@@ -56,25 +56,25 @@ func isNotFoundError(err error) bool {
 type Provider struct {
 	provider.BaseProvider
 	client       ibclient.IBConnector
-	domainFilter endpoint.DomainFilter
+	domainFilter *endpoint.DomainFilter
 	config       *StartupConfig
 }
 
 // StartupConfig clarifies the method signature
 type StartupConfig struct {
-	Host         string `env:"INFOBLOX_HOST,required" envDefault:"localhost"`
-	Port         int    `env:"INFOBLOX_PORT,required" envDefault:"443"`
-	Username     string `env:"INFOBLOX_WAPI_USER,required"`
-	Password     string `env:"INFOBLOX_WAPI_PASSWORD,required"`
-	Version      string `env:"INFOBLOX_VERSION,required"`
-	SSLVerify    bool   `env:"INFOBLOX_SSL_VERIFY" envDefault:"true"`
-	DryRun       bool   `env:"INFOBLOX_DRY_RUN" envDefault:"false"`
-	View         string `env:"INFOBLOX_VIEW" envDefault:"default"`
-	MaxResults   int    `env:"INFOBLOX_MAX_RESULTS" envDefault:"1500"`
-	CreatePTR    bool   `env:"INFOBLOX_CREATE_PTR" envDefault:"false"`
-	DefaultTTL   int    `env:"INFOBLOX_DEFAULT_TTL" envDefault:"300"`
-	UseTTL       bool   `env:"INFOBLOX_USE_TTL" envDefault:"true"`
-	ExtAttrsJSON string `env:"INFOBLOX_EXTENSIBLE_ATTRIBUTES_JSON" envDefault:"{}"`
+	Host         string `env:"INFOBLOX_HOST" required:"" default:"localhost"`
+	Port         int    `env:"INFOBLOX_PORT" required:"" default:"443"`
+	Username     string `env:"INFOBLOX_WAPI_USER" required:""`
+	Password     string `env:"INFOBLOX_WAPI_PASSWORD" required:""`
+	Version      string `env:"INFOBLOX_VERSION" required:""`
+	SSLVerify    bool   `env:"INFOBLOX_SSL_VERIFY" default:"true"`
+	DryRun       bool   `env:"INFOBLOX_DRY_RUN" default:"false"`
+	View         string `env:"INFOBLOX_VIEW" default:"default"`
+	MaxResults   int    `env:"INFOBLOX_MAX_RESULTS" default:"1500"`
+	CreatePTR    bool   `env:"INFOBLOX_CREATE_PTR" default:"false"`
+	DefaultTTL   int    `env:"INFOBLOX_DEFAULT_TTL" default:"300"`
+	UseTTL       bool   `env:"INFOBLOX_USE_TTL" default:"true"`
+	ExtAttrsJSON string `env:"INFOBLOX_EXTENSIBLE_ATTRIBUTES_JSON" default:"{}"`
 	FQDNRegEx    string
 	NameRegEx    string
 }
@@ -129,7 +129,7 @@ func (mrb *ExtendedRequestBuilder) BuildRequest(t ibclient.RequestType, obj ibcl
 }
 
 // NewInfobloxProvider creates a new Infoblox provider.
-func NewInfobloxProvider(cfg *StartupConfig, domainFilter endpoint.DomainFilter) (*Provider, error) {
+func NewInfobloxProvider(cfg *StartupConfig, domainFilter *endpoint.DomainFilter) (*Provider, error) {
 	hostCfg := ibclient.HostConfig{
 		Host:    cfg.Host,
 		Port:    strconv.Itoa(cfg.Port),
