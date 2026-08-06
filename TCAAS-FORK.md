@@ -37,16 +37,50 @@ only this document.
 
 ## Image
 
-Tag `v1.7.2-telekom.2` triggers `.github/workflows/tcaas-image.yaml`, which
-publishes `ghcr.io/maxrink/external-dns-infoblox-webhook:<tag>` (amd64 + arm64)
-using only the built-in `GITHUB_TOKEN`.
+`.github/workflows/tcaas-image.yaml` publishes
+`ghcr.io/maxrink/external-dns-infoblox-webhook:<tag>` (amd64 + arm64) on a
+`v*-telekom.*` tag push, using only the built-in `GITHUB_TOKEN`.
 
-That workflow has not run yet. GitHub Actions is disabled on this fork, so no
-workflow is registered and no run is created by a tag push
-(`actions/workflows` reports `total_count: 0`). Enable it once in the web UI at
-`https://github.com/MaxRink/external-dns-infoblox-webhook/actions`, then re-push
-a `-telekom.N` tag. The package must also be flipped to public afterwards, or
-the cluster cannot pull it without an image pull secret.
+Current bridge image:
+
+```
+ghcr.io/maxrink/external-dns-infoblox-webhook:v1.7.2-telekom.3
+```
+
+| Manifest | Digest |
+| --- | --- |
+| manifest list (OCI index) | `sha256:336bb21bfc4bf4af1c52b0af2d9e66190d9b48e05ee3b1f50468f4fd3b1b44fc` |
+| `linux/amd64` | `sha256:f1e69f4c922b415d881a4330f98fd3a198a72546eae887549a66778dfdeac541` |
+| `linux/arm64` | `sha256:1eae059d1645713dab2dc2b7d93a435565b2b4e8513082936d45e76b4d147631` |
+
+The GHCR package is public: an anonymous pull token fetches the index and both
+per-architecture manifests, so T-CaaS clusters need no image pull secret. The
+image is a bridge built from unmerged code; treat the pin as temporary.
+
+Note that `v1.7.2-telekom.3` reports `Gitsha` `e5307471` rather than its own tag
+commit `097830d7`. It was published by a `workflow_dispatch` before the SHA
+stamping was corrected; the image content is built from the tag, only the
+recorded SHA is off. Tags from `v1.7.2-telekom.4` onwards stamp correctly.
+
+### Actions is enabled
+
+GitHub Actions **is** enabled on this fork; an earlier version of this document
+claimed the opposite and was wrong. The reason the first two `-telekom.N` tag
+pushes published nothing is different, and worth recording:
+
+> A workflow only becomes registered, and its triggers only start being
+> evaluated, once GitHub has seen the file on the repository **default branch**.
+
+`tcaas-image.yaml` initially existed only on `tcaas-main`, so it was never
+registered: `actions/workflows` listed only the four upstream workflows, and
+tag pushes of `v1.7.2-telekom.1`, `.2` and `.3` each created zero runs even
+though the workflow file was present on the tagged commits and parsed cleanly.
+Adding the file to `main` registered it immediately.
+
+So this one fork-only workflow must stay on `main`. It carries a
+`workflow_dispatch` with a `ref` input for on-demand rebuilds, and refuses to
+publish unless the resolved ref matches `v*-telekom.*`, so a dispatch from
+`main` cannot publish a misleadingly-tagged image.
 
 ## Retirement
 
