@@ -72,6 +72,10 @@ jobs:
               ;;
           esac
           echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          # GITHUB_SHA is the dispatching ref, not the checked-out one, so on a
+          # workflow_dispatch it would stamp the default-branch commit into the
+          # binary. Read the real commit out of the working tree instead.
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Install Go
         uses: actions/setup-go@v5
@@ -85,7 +89,7 @@ jobs:
             mkdir -p "build/${arch}"
             cp Dockerfile "build/${arch}/Dockerfile"
             CGO_ENABLED=0 GOOS=linux GOARCH="${arch}" go build \
-              -ldflags "-X 'main.Version=${{ steps.meta.outputs.tag }}' -X 'main.Gitsha=${GITHUB_SHA}'" \
+              -ldflags "-X 'main.Version=${{ steps.meta.outputs.tag }}' -X 'main.Gitsha=${{ steps.meta.outputs.sha }}'" \
               -o "build/${arch}/external-dns-infoblox-webhook" ./cmd/webhook
           done
 
