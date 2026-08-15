@@ -1411,3 +1411,34 @@ func (r *mockRequestor) SendRequest(req *http.Request) (res []byte, err error) {
 func validateEndpoints(t *testing.T, endpoints []*endpoint.Endpoint, expected []*endpoint.Endpoint) {
 	assert.True(t, SameEndpoints(endpoints, expected), "actual and expected endpoints don't match. %s:%s", endpoints, expected)
 }
+
+func TestToAAAAResponseMapDeduplicatesEquivalentNotations(t *testing.T) {
+	name := "host.example.com"
+	expanded := "2001:0db8:0000:0000:0000:0000:0000:0001"
+	compressed := "2001:db8::1"
+	ttl := uint32(300)
+
+	res := []ibclient.RecordAAAA{
+		{Name: &name, Ipv6Addr: &compressed, Ttl: &ttl},
+		{Name: &name, Ipv6Addr: &expanded, Ttl: &ttl},
+	}
+
+	rm := ToAAAAResponseMap(res)
+	assert.Len(t, rm.Map[name], 1, "the same address in two notations must yield one target")
+	assert.Equal(t, compressed, rm.Map[name][0].Target, "the first notation seen is kept")
+}
+
+func TestToAAAAResponseMapKeepsDistinctAddresses(t *testing.T) {
+	name := "host.example.com"
+	first := "2001:db8::1"
+	second := "2001:db8::2"
+	ttl := uint32(300)
+
+	res := []ibclient.RecordAAAA{
+		{Name: &name, Ipv6Addr: &first, Ttl: &ttl},
+		{Name: &name, Ipv6Addr: &second, Ttl: &ttl},
+	}
+
+	rm := ToAAAAResponseMap(res)
+	assert.Len(t, rm.Map[name], 2, "distinct addresses must both be kept")
+}
