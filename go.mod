@@ -31,12 +31,12 @@ require (
 	github.com/prometheus/common v0.53.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
-	golang.org/x/mod v0.20.0 // indirect
-	golang.org/x/net v0.38.0 // indirect
-	golang.org/x/sync v0.12.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
-	golang.org/x/tools v0.24.0 // indirect
+	golang.org/x/mod v0.35.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/tools v0.44.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
