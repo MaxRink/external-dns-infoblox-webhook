@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.3](https://github.com/MaxRink/external-dns-infoblox-webhook/compare/v1.7.2...v1.7.3) (2026-10-21)
+
+
+### Miscellaneous Chores
+
+* **deps:** configure Dependabot updates ([5f41ce8](https://github.com/MaxRink/external-dns-infoblox-webhook/commit/5f41ce82d617ebcf324243d811666d305cbc8726))
+
 ## [1.7.2](https://github.com/AbsaOSS/external-dns-infoblox-webhook/compare/v1.7.1...v1.7.2) (2026-07-21)
 
 
